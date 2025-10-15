@@ -1,0 +1,5 @@
+{
+  "name": "AI SỬA ẢNH THÔNG MINH",
+  "description": "An intelligent AI-powered photo editing application using Google Gemini to perform advanced edits, apply filters, and make adjustments with simple text prompts. Features include retouching, adjustments, artistic filters, and cropping.",
+  "requestFramePermissions": []
+}
