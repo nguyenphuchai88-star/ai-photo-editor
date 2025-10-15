@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI SỬA ẢNH THÔNG MINH</title>
+    
+    <style>
+      /* Global Error Overlay Style */
+      #error-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(12, 10, 24, 0.95);
+        color: #f87171;
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Inter', sans-serif, monospace;
+        padding: 2rem;
+        box-sizing: border-box;
+      }
+      #error-overlay .content {
+        background: rgba(23, 21, 40, 0.8);
+        border: 1px solid #ef4444;
+        border-radius: 1rem;
+        padding: 2rem;
+        max-width: 800px;
+        width: 100%;
+        text-align: center;
+      }
+      #error-overlay h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ef4444;
+        margin-bottom: 1rem;
+      }
+      #error-overlay p {
+        color: #fca5a5;
+        margin-bottom: 1.5rem;
+      }
+      #error-overlay pre {
+        background-color: #1f2937;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        text-align: left;
+        color: #e5e7eb;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-size: 0.9rem;
+        max-height: 40vh;
+        overflow-y: auto;
+      }
+    </style>
+
+    <script>
+      // Global Error Catcher - This MUST be the first script to run.
+      function displayGlobalError(details) {
+        // Hide the main app root to prevent it from showing underneath
+        var root = document.getElementById('root');
+        if (root) {
+          root.style.display = 'none';
+        }
+        
+        // Create and inject the error overlay if it doesn't already exist
+        if (!document.getElementById('error-overlay')) {
+            var overlay = document.createElement('div');
+            overlay.id = 'error-overlay';
+            overlay.innerHTML = `
+              <div class="content">
+                <h1>Lỗi khởi động ứng dụng</h1>
+                <p>Không thể tải ứng dụng. Điều này thường xảy ra do lỗi mạng, lỗi cú pháp trong mã nguồn, hoặc không thể tải được các tệp cần thiết. Vui lòng mở Developer Console (F12) để xem chi tiết.</p>
+                <pre>${details}</pre>
+              </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+      }
+
+      // Catcher for standard synchronous errors
+      window.onerror = function(message, source, lineno, colno, error) {
+        const errorDetails = `<strong>Lỗi:</strong> ${message}\n<strong>Tệp:</strong> ${source}\n<strong>Dòng:</strong> ${lineno}, <strong>Cột:</strong> ${colno}`;
+        displayGlobalError(errorDetails);
+        return true; // Prevent default browser error handling
+      };
+      
+      // Catcher for errors in Promises (e.g., module loading failures)
+      window.addEventListener('unhandledrejection', function(event) {
+        const reason = event.reason || {};
+        const message = reason.message || 'Unhandled Promise Rejection';
+        const stack = reason.stack || 'Không có dấu vết ngăn xếp.';
+        const errorDetails = `<strong>Lỗi Promise không được xử lý:</strong> ${message}\n<hr style="border-color: #4b5563; margin: 8px 0;" />\n${stack}`;
+        displayGlobalError(errorDetails);
+      });
+    </script>
+
+    <!-- Sửa lỗi: Thay thế icon không tồn tại và sử dụng đường dẫn tương đối -->
+    <link rel="icon" type="image/png" href="/ai-photo-editor/assets/icon-192x192-D44qHGVO.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- PWA Manifest Link - Sửa lỗi: Sử dụng đường dẫn tương đối -->
+    <link rel="manifest" href="/ai-photo-editor/assets/manifest-CpXNpEiw.json" />
+    <meta name="theme-color" content="#8B5CF6">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FIX: Corrected the version number for react-image-crop CSS to a valid one and used a reliable CDN. -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/react-image-crop@11.0.5/dist/ReactCrop.css" />
+    
+    <!-- Babel Standalone for in-browser TSX/TS transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0c0a18;
+      }
+      .space-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: -1;
+        background-image: url('https://picsum.photos/seed/space/2000/1200');
+        background-size: cover;
+        background-position: center;
+        animation: slow-pan 60s linear infinite alternate;
+      }
+       @keyframes slow-pan {
+        0% {
+          transform: scale(1) translate(0, 0);
+        }
+        100% {
+          transform: scale(1.1) translate(5%, 5%);
+        }
+      }
+      .glassmorphism {
+        background: rgba(23, 21, 40, 0.6);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      /* Custom scrollbar for webkit browsers */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1e1b33;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #4a437c;
+        border-radius: 10px;
+        border: 2px solid #1e1b33;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #6a61a5;
+      }
+    </style>
+  <!-- 
+    The importmap defines direct URLs for ES Module imports. 
+    This uses esm.sh, a CDN that specializes in serving ESM-compatible packages.
+  -->
+
+</head>
+  <body>
+    <div class="space-bg"></div>
+    <div id="root"></div>
+    
+    <!-- 
+      This script tag tells Babel to fetch and transpile the main TSX file.
+      `data-presets="react,typescript"` is added to ensure Babel uses the correct transformers for React (JSX) and TypeScript.
+      This is crucial for it to correctly process the chain of imported .tsx/.ts modules.
+      `data-type="module"` ensures the final script is treated as an ES module by the browser.
+    -->
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@0.14.0",
+    "react-image-crop": "https://esm.sh/react-image-crop@11.0.5",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+    <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
+
+    <script>
+      // PWA Service Worker Registration - Sửa lỗi: Sử dụng đường dẫn tương đối
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
