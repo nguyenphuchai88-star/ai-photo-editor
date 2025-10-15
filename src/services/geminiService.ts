@@ -1,4 +1,7 @@
-import { GoogleGenAI, Modality } from 'https://esm.sh/@google/generative-ai@0.14.0'Could not access process.env.API_KEY. This is expected in some environments.");
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "https://esm.sh/@google/generative-ai@0.14.0";
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+const genAI = new GoogleGenerativeAI(apiKey);
+
 }
 
 
