@@ -1,11 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// ✅ Cấu hình cho GitHub Pages
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/ai-photo-editor/", // 👈 Đúng với tên repo GitHub của bạn
-  build: {
-    outDir: "dist",
-  },
+  base: "/ai-photo-editor/", // 👈 thêm dòng này
 });
